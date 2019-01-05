@@ -8,7 +8,7 @@ const DEFAULTS = {
 };
 
 const setIcon = (weather) => {
-  if (weather != undefined) {
+  if (weather !== undefined) {
     switch(weather){
       case "clear-night":
         return "CLEAR_NIGHT"
@@ -21,23 +21,25 @@ const setIcon = (weather) => {
       default:
         return weather.toUpperCase()
     }
-  }
+  } else { return "CLEAR_DAY" }
 }
 
 const WeatherCard = (props) => {
   let iconType = setIcon(props.icon)
 
   return (
-    <div>
+    <div class="card blue-grey darken-1">
       <ReactAnimatedWeather className="weather-icon"
         icon={iconType}
         color={DEFAULTS.color}
         size ={DEFAULTS.size}
         animate={DEFAULTS.animate}
       />
-      <p>{props.temp}</p>
-      <p>{props.summary}</p>
-      <p>{props.visibility}</p>
+      <div className="card-content white-text">
+        <p>{props.temp} degrees farenheit</p>
+        <p>{props.summary}</p>
+        <p>{props.visibility}</p>
+      </div>
     </div>
   )
 

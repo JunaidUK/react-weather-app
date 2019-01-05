@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import '../App.css';
+import '../weathercontainer.css';
 import WeatherCard from '../components/WeatherCard.js'
 
 const PROXY = "https://cors-anywhere.herokuapp.com/"
 const API_KEY = ""
+
 class WeatherContainer extends Component {
   constructor(props) {
     super(props)
@@ -11,7 +12,9 @@ class WeatherContainer extends Component {
       latitude: "26.092889",
       longitude: "85.948972",
       current_weather: {},
-      daily_weather: {}
+      daily_weather: {
+        data: []
+      }
     }
   }
 
@@ -29,21 +32,46 @@ class WeatherContainer extends Component {
       .then(response => response.json())
       .then(body => {
         this.setState({current_weather: body.currently, daily_weather: body.daily})
+        return body
       })
       .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
 
   render() {
-    debugger
+    let dailyWeatherCards = this.state.daily_weather.data.map((dayWeather)=>{
+      return(
+        <li>
+          <div className="col s12 l6">
+            <WeatherCard
+              temp={dayWeather.temperatureHigh}
+              visibility={dayWeather.visibility}
+              summary={dayWeather.summary}
+              icon = {dayWeather.icon}
+              />
+          </div>
+        </li>
+      )
+    })
     return (
-      <div className="App">
-          <WeatherCard id="current-weather"
-            temp={this.state.current_weather.temperature}
-            visibility={this.state.current_weather.visibility}
-            summary={this.state.current_weather.summary}
-            icon = {this.state.current_weather.icon}
-          />
+      <div className="container">
+        <div className="row">
+          <h4> TODAY</h4>
+          <div className="col s12 m12 l12">
+            <WeatherCard id="current-weather"
+              temp={this.state.current_weather.temperature}
+              visibility={this.state.current_weather.visibility}
+              summary={this.state.current_weather.summary}
+              icon = {this.state.current_weather.icon}
+              />
+          </div>
+          <div id="daily-weather-cards">
+          <h4>NEXT WEEK</h4>
+          <ul>
+            {dailyWeatherCards}
+          </ul>
+          </div>
+        </div>
       </div>
     );
   }
